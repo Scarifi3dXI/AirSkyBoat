@@ -410,21 +410,28 @@ function xi.events.starlightCelebration.smileBringerSergeantOnFinish(player, npc
         xi.events.starlightCelebration.toggleSmileHelpers(zoneid)
     elseif csid == 7005 then
         local hasItem = player:hasItem(138)
-        if hasItem == true then
-            player:resetLocalVars()
-            player:setCharVar("[SmileBootCamp]Completed", VanadielUniqueDay())
-            npcUtil.giveItem( player, 5622, { silent = true } )
-            if not player:hasKeyItem(xi.keyItem.BELL_THEMED_GIFT_TOKEN) then
-                player:addKeyItem(xi.keyItem.BELL_THEMED_GIFT_TOKEN)
-                player:messageSpecial(id.text.KEYITEM_OBTAINED, xi.keyItem.BELL_THEMED_GIFT_TOKEN)
+        local invAvailable = player:getFreeSlotsCount()
+
+        if invAvailable ~= 0 then
+            if hasItem == true then
+                player:resetLocalVars()
+                player:setCharVar("[SmileBootCamp]Completed", VanadielUniqueDay())
+                npcUtil.giveItem( player, 5622, { silent = true } )
+                if not player:hasKeyItem(xi.keyItem.BELL_THEMED_GIFT_TOKEN) then
+                    player:addKeyItem(xi.keyItem.BELL_THEMED_GIFT_TOKEN)
+                    player:messageSpecial(id.text.KEYITEM_OBTAINED, xi.keyItem.BELL_THEMED_GIFT_TOKEN)
+                end
+            else
+                player:resetLocalVars()
+                player:setCharVar("[SmileBootCamp]Completed", VanadielUniqueDay())
+                npcUtil.giveItem( player, 138, { silent = true } )
             end
         else
-            player:resetLocalVars()
-            player:setCharVar("[SmileBootCamp]Completed", VanadielUniqueDay())
-            npcUtil.giveItem( player, 138, { silent = true } )
+            player:showText(npc, id.text.DEFAULT_CANNOT_BE_OBTAINED)
         end
     elseif csid == 7004 and option == 5 then
         player:resetLocalVars()
+
     elseif csid == 7011 then
         player:resetLocalVars()
     end
