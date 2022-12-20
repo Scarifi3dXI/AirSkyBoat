@@ -418,8 +418,7 @@ function xi.events.starlightCelebration.smileBringerSergeantOnFinish(player, npc
             npcUtil.giveItem( player, 138, { silent = true } )
         end
     elseif csid == 7004 and option == 5 then
-        player:setLocalVar("bootCampStarted", 0)
-        player:setLocalVar("playerBCCP", 0)
+        player:resetLocalVars()
     elseif csid == 7011 then
         player:resetLocalVars()
     end
@@ -439,12 +438,12 @@ function xi.events.starlightCelebration.smileHelperTrigger(player, npc, id)
             if (npcPoint == 0 and playerPoint ~= 10) then
                 player:setLocalVar("playerBCCP", playerPoint + 1)
                 player:setLocalVar("Checkpoint" .. npcID, 1)
-                if player:getStatusEffect(xi.effect.FLEE) ~= nil or playerPoint == 0 or missedFlee == 0 then
+                if (player:getStatusEffect(xi.effect.FLEE) ~= nil or (playerPoint == 1) or (missedFlee == 1)) then
                     player:setLocalVar("missedFlee", 0)
                     player:showText(npc, id.text.SMILEHELPER_CHECKPOINT_2, 0, playerPoint, minutes, seconds)
                     player:addStatusEffect(xi.effect.FLEE, 100, 0, 30)
                 else
-                    local rnd = math.random(0, 3)
+                    local rnd = math.random(0, 5)
                     if rnd ~= 3 then
                         player:setLocalVar("missedFlee", 1)
                         player:showText(npc, id.text.SMILEHELPER_CHECKPOINT_1, 0, playerPoint, minutes, seconds)
