@@ -334,6 +334,13 @@ end
 -- Smilebringer Bootcamp Sub-Quest --
 -------------------------------------
 
+local zoneDefaultTimes =
+{
+    [385] = 230,
+    [386] = 270,
+    [387] = 240,
+}
+
 function xi.events.starlightCelebration.smileBringerSergeantOnTrigger(player, npc, zoneOption)
     local elapsedTime = (os.time() - player:getLocalVar("bootCampStarted"))
     local playerPoint = player:getLocalVar("playerBCCP")
@@ -343,7 +350,7 @@ function xi.events.starlightCelebration.smileBringerSergeantOnTrigger(player, np
     local hasTree = player:hasItem(138)
     local recordHolderID = npc:getLocalVar("recordHolderID")
     local recordHolderName = ""
-    local recordTime = 0
+    local recordTime = zoneDefaultTimes[zoneOption]
     local entry = 0
     local qualifyingTime = 540
 
@@ -357,7 +364,6 @@ function xi.events.starlightCelebration.smileBringerSergeantOnTrigger(player, np
         recordTime = npc:getLocalVar("recordTime")
     else
         recordHolderName = "Smilebringer"
-        recordTime = 270
     end
 
     if completedDay ~= currentDay then
@@ -438,7 +444,7 @@ function xi.events.starlightCelebration.smileHelperTrigger(player, npc, id)
             if (npcPoint == 0 and playerPoint ~= 10) then
                 player:setLocalVar("playerBCCP", playerPoint + 1)
                 player:setLocalVar("Checkpoint" .. npcID, 1)
-                if (player:getStatusEffect(xi.effect.FLEE) ~= nil or (playerPoint == 1) or (missedFlee == 1)) then
+                if (player:getStatusEffect(xi.effect.FLEE) ~= nil or playerPoint == 1 or missedFlee == 1) then
                     player:setLocalVar("missedFlee", 0)
                     player:showText(npc, id.text.SMILEHELPER_CHECKPOINT_2, 0, playerPoint, minutes, seconds)
                     player:addStatusEffect(xi.effect.FLEE, 100, 0, 30)
@@ -453,7 +459,7 @@ function xi.events.starlightCelebration.smileHelperTrigger(player, npc, id)
                         player:addStatusEffect(xi.effect.FLEE, 100, 0, 30)
                     end
                 end
-            elseif playerPoint == 10 then
+            elseif (playerPoint == 10 and npcPoint == 0) then
                 player:showText(npc, id.text.SMILEHELPER_POINTS_CLEARED)
                 player:addStatusEffect(xi.effect.FLEE, 100, 0, 30)
             elseif npcPoint ~= 0 then
